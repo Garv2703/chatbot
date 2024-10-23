@@ -1,0 +1,161 @@
+/* Importing Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    padding: 0;
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: #1c1c1c;
+    padding: 20px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.8rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    font-weight: 600;
+}
+
+/* Chat Container - Full width but with central content */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%; /* Full width */
+    height: calc(100vh); /* Full height minus navbar height (adjust if navbar height changes) */
+    padding-top: 80px; /* Keep padding for navbar space */
+    background-color: #1e1e1e; /* Grey background spanning full width */
+    overflow: hidden; /* Prevent overflow */
+}
+
+
+/* Centering messages inside a narrower chat box */
+.chat-box {
+    width: 50%; /* Narrow width */
+    max-width: 800px; /* Max width on larger screens */
+    margin: 0 auto; /* Center the chat box horizontally */
+    padding: 20px;
+    background-color: transparent; /* Keep background transparent */
+    overflow-y: auto;
+    flex-grow: 1;
+    scroll-behavior: smooth;
+}
+
+/* Message Styling */
+.message {
+    padding: 12px 20px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    display: inline-block;
+    word-wrap: break-word;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    max-width: 80%; /* Limit the max width of the message */
+    font-size: 1rem; /* Adjust text size */
+    line-height: 1.5;
+}
+
+/* User message on the right */
+.user-message {
+    background-color: #3a3a3a;
+    color: #d4d4d4;
+    align-self: flex-end;
+    text-align: left; /* Messages should align to the left inside the box */
+    border-radius: 12px 12px 0 12px;
+    margin-left: auto;
+}
+
+/* AI message on the left */
+.ai-message {
+    background-color: #2b2b2b;
+    color: #e0e0e0;
+    align-self: flex-start;
+    text-align: left;
+    border-radius: 12px 12px 12px 0;
+    margin-right: auto;
+}
+
+/* Input Form Styling */
+form {
+    display: flex;
+    align-items: center;
+    width: 50%; /* Match the width of the central chat area */
+    max-width: 800px;
+    margin: 0 auto; /* Center the input form */
+    padding: 10px 0;
+}
+
+form input {
+    flex-grow: 1;
+    padding: 12px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    margin-right: 10px;
+    font-size: 1rem;
+    outline: none;
+}
+
+form button {
+    padding: 12px 25px;
+    background-color: #5a5a5a;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+form button:hover {
+    background-color: #6a6a6a;
+}
+
+/* Scrollbar Styling for Chat Box */
+.chat-box::-webkit-scrollbar {
+    width: 10px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 5px;
+}
+
+code {
+    display: block; /* Block-level element for better spacing */
+    background-color: #282c34; /* Dark background color */
+    color: #61dafb; /* Light blue text color for visibility */
+    padding: 10px; /* Inner padding */
+    border-radius: 5px; /* Slightly rounded corners */
+    overflow-x: auto; /* Enable horizontal scrolling for long lines */
+    font-family: 'Courier New', monospace; /* Monospace font for code */
+    margin: 10px 0; /* Margin for spacing above and below */
+    border: 1px solid #444; /* Border to define the code area */
+}
+
+/* Media Query for Small Devices */
+@media (max-width: 600px) {
+    .chat-container {
+        padding-left: 0; /* Remove left padding */
+        padding-right: 0; /* Remove right padding */
+    }
+}
