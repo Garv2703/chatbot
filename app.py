@@ -71,4 +71,4 @@ def get_response():
     return jsonify({'chatbot_response': response, 'user_input': user_input})
 
 if app.name == '__main__':
-    app.run(debug=True)
+    app.run()
