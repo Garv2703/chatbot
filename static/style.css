@@ -152,6 +152,15 @@ code {
     border: 1px solid #444; /* Border to define the code area */
 }
 
+.chat-container a, .chat-container a:active {
+    color: #1e90ff; /* Link color */
+    text-decoration: none; /* No underline */
+}
+
+.chat-container a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
 /* Media Query for Small Devices */
 @media (max-width: 600px) {
     .chat-container {
