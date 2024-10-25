@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,28 +8,64 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 <body>
-    
-    <!-- Navbar -->
     <nav class="navbar">
         <h1>AI Chatbot</h1>
     </nav>
 
-    <!-- Chat Container -->
-    <div class="chat-container">
-        <br>
-        <div id="chat-box" class="chat-box">
-            <!-- Messages will be appended here -->
+    <div class="container">
+        <div class="chat-container">
+            <div id="chat-box" class="chat-box">
+                {% for message in chat_history %}
+                    {% if loop.index > 2 %}  <!-- Skip the first message -->
+                    <div class="message {{ 'user-message' if message.role == 'user' else 'ai-message' }}">
+                        {% if message.role == 'user' %}
+                            <button class="edit-button user-edit-button">Edit</button> <!-- Edit button for user -->
+                        {% endif %}
+                        {{ message.parts | safe }}
+                        {% if message.role == 'model' %}
+                            <button class="edit-button ai-edit-button">Edit</button> <!-- Edit button for AI -->
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <form id="chat-form" class="chat-form">
+                <input type="text" id="user_input" name="user_input" placeholder="Message AI..." required autocomplete="off">
+                <button type="submit">Send</button>
+            </form>
         </div>
 
-        <!-- Input Box -->
-        <form id="chat-form" class="chat-form">
-            <input type="text" id="user_input" name="user_input" placeholder="Type your message..." required autocomplete='off'>
-            <button type="submit">Send</button>
-        </form>
+        <!-- Settings Menu -->
+        <!-- <div class="settings-menu">
+            <h2>Settings</h2>
+            <div class="setting-option">
+                <label for="theme-toggle">Dark Mode</label>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-option">
+                <h3>Theme Templates</h3>
+                <div class="theme-images">
+                    <img src="path/to/image1.jpg" alt="Template 1" data-bg="url('path/to/image1.jpg')">
+                    <img src="path/to/image2.jpg" alt="Template 2" data-bg="url('path/to/image2.jpg')">
+                    <img src="path/to/image3.jpg" alt="Template 3" data-bg="url('path/to/image3.jpg')">
+                    <img src="path/to/image4.jpg" alt="Template 4" data-bg="url('path/to/image4.jpg')">
+                </div>
+            </div>
+            <button id="clear-chat">Clear Chat</button>
+        </div> -->
     </div>
 
     <script>
         $(document).ready(function() {
+            $('#chat-box').children('.ai-message').each(function() {
+                $(this).css('opacity', 1);
+            });
+
             $('#chat-form').on('submit', function(e) {
                 e.preventDefault();
                 var user_input = $('#user_input').val();
@@ -41,22 +77,26 @@
                         user_input: user_input
                     },
                     success: function(response) {
-                        $('#chat-box').append(
-                            '<div class="message user-message">' + user_input + '</div><br>'
-                        );
-                        $('#chat-box').append(
-                            '<div class="message ai-message">' + response.chatbot_response + '</div><br>'
-                        );
+                        const userMessage = $('<div class="message user-message">' + user_input + '</div>');
+                        const aiMessage = $('<div class="message ai-message message-ai">' + response.chatbot_response + '</div>');
+
+                        $('#chat-box').append(userMessage);
+                        $('#chat-box').append(aiMessage);
+                        setTimeout(function() {
+                            aiMessage.addClass('show');
+                        }, 100);
                         $('#user_input').val('');
                         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                     },
                     error: function(xhr, status) {
-                        $('#chat-box').append(
-                            '<div class="message user-message">' + user_input + '</div><br>'
-                        );
-                        $('#chat-box').append(
-                            '<div class="message ai-message">An Error Occurred</div><br>'
-                        );
+                        const userMessage = $('<div class="message user-message">' + user_input + '</div>');
+                        const aiMessage = $('<div class="message ai-message message-ai">There was an error generating the response!!</div>');
+
+                        $('#chat-box').append(userMessage);
+                        $('#chat-box').append(aiMessage);
+                        setTimeout(function() {
+                            aiMessage.addClass('show');
+                        }, 100);
                         $('#user_input').val('');
                         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                     }

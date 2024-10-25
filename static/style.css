@@ -22,8 +22,8 @@ body {
 
 /* Navbar Styling */
 .navbar {
-    background-color: #1c1c1c;
-    padding: 20px;
+    background-color: #171515;
+    padding: 15px;
     text-align: center;
     color: #ffffff;
     font-size: 1.8rem;
@@ -40,6 +40,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     width: 100%; /* Full width */
     height: calc(100vh); /* Full height minus navbar height (adjust if navbar height changes) */
     padding-top: 80px; /* Keep padding for navbar space */
@@ -47,21 +48,21 @@ body {
     overflow: hidden; /* Prevent overflow */
 }
 
-
-/* Centering messages inside a narrower chat box */
-.chat-box {
-    width: 50%; /* Narrow width */
-    max-width: 800px; /* Max width on larger screens */
-    margin: 0 auto; /* Center the chat box horizontally */
-    padding: 20px;
-    background-color: transparent; /* Keep background transparent */
+/* Chat Box - Centered content */
+#chat-box {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Full width alignment */
+    padding: 10px;
     overflow-y: auto;
-    flex-grow: 1;
-    scroll-behavior: smooth;
+    max-height: 500px;
+    width: 50%; /* Full width */
 }
 
 /* Message Styling */
 .message {
+    position: relative; /* Make this relative to position the button */
     padding: 12px 20px;
     margin-bottom: 12px;
     border-radius: 10px;
@@ -73,17 +74,45 @@ body {
     line-height: 1.5;
 }
 
-/* User message on the right */
+/* Styles for the edit button */
+.edit-button {
+    display: none; /* Hide the button by default */
+    background-color: #5a5a5a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+/* Show the edit button on hover */
+.message:hover .edit-button {
+    display: block; /* Show the button on hover */
+}
+
+/* Position edit button for user messages */
+.user-message .user-edit-button {
+    position: absolute;
+    left: -60px; /* Adjust to your desired position */
+}
+
+/* Position edit button for AI messages */
+.ai-message .ai-edit-button {
+    position: absolute;
+    right: -60px; /* Adjust to your desired position */
+}
+
+/* Adjusting user and AI message alignment */
 .user-message {
     background-color: #3a3a3a;
     color: #d4d4d4;
     align-self: flex-end;
-    text-align: left; /* Messages should align to the left inside the box */
+    text-align: left;
     border-radius: 12px 12px 0 12px;
-    margin-left: auto;
 }
 
-/* AI message on the left */
+/* AI Message with Transition */
 .ai-message {
     background-color: #2b2b2b;
     color: #e0e0e0;
@@ -91,6 +120,14 @@ body {
     text-align: left;
     border-radius: 12px 12px 12px 0;
     margin-right: auto;
+    opacity: 0; /* Start with hidden */
+}
+.message-ai {
+    transition: opacity 0.5s ease-in-out; /* Fade-in effect */
+}
+
+.message.show {
+    opacity: 1; /* Make visible when .show is added */
 }
 
 /* Input Form Styling */
@@ -105,7 +142,7 @@ form {
 
 form input {
     flex-grow: 1;
-    padding: 12px;
+    padding: 15px;
     background-color: #333;
     color: #fff;
     border: none;
@@ -113,6 +150,12 @@ form input {
     margin-right: 10px;
     font-size: 1rem;
     outline: none;
+    padding-left: 5%;
+    font-size: 1.2rem;
+}
+
+form input::placeholder {
+    color: #868686;
 }
 
 form button {
@@ -159,6 +202,109 @@ code {
 
 .chat-container a:hover {
     text-decoration: underline; /* Underline on hover */
+}
+
+/* Settings Menu */
+.settings-menu {
+    width: 250px;
+    padding: 20px;
+    background-color: rgba(30, 30, 30, 0.9);
+    border-left: 1px solid #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.settings-menu h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+/* Setting Option */
+.setting-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+/* Toggle Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+/* Clear Chat Button */
+#clear-chat {
+    background-color: #5a5a5a;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#clear-chat:hover {
+    background-color: #6a6a6a;
+}
+
+/* Theme Images */
+.theme-images {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.theme-images img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.theme-images img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Media Query for Small Devices */
