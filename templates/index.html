@@ -17,15 +17,9 @@
             <div id="chat-box" class="chat-box">
                 {% for message in chat_history %}
                     {% if loop.index > 2 %}  <!-- Skip the first message -->
-                    <div class="message {{ 'user-message' if message.role == 'user' else 'ai-message' }}">
-                        {% if message.role == 'user' %}
-                            <button class="edit-button user-edit-button">Edit</button> <!-- Edit button for user -->
-                        {% endif %}
-                        {{ message.parts | safe }}
-                        {% if message.role == 'model' %}
-                            <button class="edit-button ai-edit-button">Edit</button> <!-- Edit button for AI -->
-                        {% endif %}
-                    </div>
+                        <div class="message {{ 'user-message' if message.role == 'user' else 'ai-message' }}">
+                            {{ message.parts | safe }}
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
