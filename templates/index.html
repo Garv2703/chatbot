@@ -33,7 +33,7 @@
         <div class="settings-menu">
             <h2>Templates</h2>
             <div class="template-options">
-                <div class="template-option" style="background-image: url('{{ url_for('static', filename='1.jpg') }}');"></div>
+                <div class="template-option selected" style="background-image: url('{{ url_for('static', filename='1.jpg') }}');"></div>
                 <div class="template-option" style="background-image: url('{{ url_for('static', filename='2.avif') }}');"></div>
                 <div class="template-option" style="background-image: url('{{ url_for('static', filename='3.jpg') }}');"></div>
             </div>
@@ -78,6 +78,8 @@
             const savedTemplate = localStorage.getItem('chatBackground');
             if (savedTemplate) {
                 $('.chat-container').css('background-image', savedTemplate);
+            } else {
+                $('.chat-container').css('background-image', '{{url_for('static', filename='1.jpg')}}');
             }
 
             $('.template-option').on('click', function() {
