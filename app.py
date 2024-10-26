@@ -17,6 +17,7 @@ chat = model.start_chat(history=history)
 def get_gemini_response(prompt):
     global chat
     response = chat.send_message(prompt)
+    
     resp = response.text
     resp = markdown2.markdown(resp)
 
@@ -34,6 +35,21 @@ def get_response():
     user_input = request.form['user_input'].strip()
     response = get_gemini_response(user_input)
     return jsonify({'chatbot_response': response, 'user_input': user_input})
+
+@app.route('/clear-chat')
+def clear_chat():
+    global history
+    history.clear()
+    history=[
+        {'role':'user', 'parts':'Hello'},
+        {'role':'model', 'parts':"Great to meet you. What would you like to know?"}
+    ]
+    btn_var = request.args.get('btn')
+    if btn_var == 'new':
+        global chat
+        chat = model.start_chat(history=history)
+        
+    return jsonify({'message': 'success'})
 
 if app.name == '__main__':
     app.run(debug=True)

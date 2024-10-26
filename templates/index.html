@@ -13,10 +13,10 @@
     </nav>
 
     <div class="container">
-        <div class="chat-container">
+        <div class="chat-container" style="background-image: localStorage.getItem('chatBackground')">
             <div id="chat-box" class="chat-box">
                 {% for message in chat_history %}
-                    {% if loop.index > 2 %}  <!-- Skip the first message -->
+                    {% if loop.index > 2 %}
                         <div class="message {{ 'user-message' if message.role == 'user' else 'ai-message' }}">
                             {{ message.parts | safe }}
                         </div>
@@ -30,34 +30,117 @@
             </form>
         </div>
 
-        <!-- Settings Menu -->
-        <!-- <div class="settings-menu">
-            <h2>Settings</h2>
-            <div class="setting-option">
-                <label for="theme-toggle">Dark Mode</label>
+        <div class="settings-menu">
+            <h2>Templates</h2>
+            <div class="template-options">
+                <div class="template-option" style="background-image: url('{{ url_for('static', filename='1.jpg') }}');"></div>
+                <div class="template-option" style="background-image: url('{{ url_for('static', filename='2.avif') }}');"></div>
+                <div class="template-option" style="background-image: url('{{ url_for('static', filename='3.jpg') }}');"></div>
+            </div>
+            <br>
+            <div class="dark-mode-container">
+                <span id="dark-mode-label">Dark Mode</span>
                 <label class="switch">
-                    <input type="checkbox" id="theme-toggle">
+                    <input type="checkbox" id="dark-mode-toggle">
                     <span class="slider"></span>
                 </label>
             </div>
-            
-            <div class="setting-option">
-                <h3>Theme Templates</h3>
-                <div class="theme-images">
-                    <img src="path/to/image1.jpg" alt="Template 1" data-bg="url('path/to/image1.jpg')">
-                    <img src="path/to/image2.jpg" alt="Template 2" data-bg="url('path/to/image2.jpg')">
-                    <img src="path/to/image3.jpg" alt="Template 3" data-bg="url('path/to/image3.jpg')">
-                    <img src="path/to/image4.jpg" alt="Template 4" data-bg="url('path/to/image4.jpg')">
-                </div>
-            </div>
-            <button id="clear-chat">Clear Chat</button>
-        </div> -->
+            <br>
+            <button class="clear-chat-btn">Clear Chat</button>
+            <button class="clear-chat-btn new-chat-btn">New Chat</button>
+        </div>
+    </div>
+
+    <div id="clearChatModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Are you sure you want to clear the chat?</p><br>
+            <button id="confirmClearChat" class="modal-button yesbtn">Yes, Clear Chat</button>
+            <button id="cancelClearChat" class="modal-button cancelbtn">No, Cancel</button>
+        </div>
     </div>
 
     <script>
         $(document).ready(function() {
+            if (localStorage.getItem('dark-mode') === 'disabled') {
+        
+            }
+        
+            // Toggle dark mode on switch change
+            $('#dark-mode-toggle').change(function() {
+                if ($(this).is(':checked')) {
+                    localStorage.setItem('dark-mode', 'enabled');
+                } else {
+                    localStorage.setItem('dark-mode', 'disabled');
+                }
+            });
+
+            const savedTemplate = localStorage.getItem('chatBackground');
+            if (savedTemplate) {
+                $('.chat-container').css('background-image', savedTemplate);
+            }
+
+            $('.template-option').on('click', function() {
+                let url = $(this).css('background-image');
+                $('.template-option').removeClass('selected');
+                $('.chat-container').css('background-image', url);
+                $(this).addClass('selected');
+                localStorage.setItem('chatBackground', url);
+            });
+
             $('#chat-box').children('.ai-message').each(function() {
                 $(this).css('opacity', 1);
+            });
+
+            // Show the modal on clear chat button click
+            $('.clear-chat-btn').on('click', function() {
+                $('#clearChatModal').css('display', 'block');
+            });
+
+            // Close the modal when the user clicks on <span> (x)
+            $('.close').on('click', function() {
+                $('#clearChatModal').css('display', 'none');
+            });
+
+            $(window).on('click', function(event) {
+                if ($(event.target).is('#clearChatModal')) {
+                    $('#clearChatModal').css('display', 'none');
+                }
+            });
+
+            $('.new-chat-btn').on('click', function() {
+                $.ajax({
+                    url: "{{ url_for('clear_chat') }}",
+                    method: 'GET',
+                    data: {'btn': 'new'},
+                    success: function(response) {
+                        $('#chat-box').empty();
+                    },
+                    error: function(xhr, status) {
+                        
+                    }
+                });
+                $('#clearChatModal').css('display', 'none');
+            });
+
+            $('#confirmClearChat').on('click', function() {
+                $.ajax({
+                    url: "{{ url_for('clear_chat') }}",
+                    method: 'GET',
+                    data: {'btn': 'clear'},
+                    success: function(response) {
+                        $('#chat-box').empty();
+                    },
+                    error: function(xhr, status) {
+                        
+                    }
+                });
+                $('#clearChatModal').css('display', 'none');
+            });
+
+            // Cancel clear chat
+            $('#cancelClearChat').on('click', function() {
+                $('#clearChatModal').css('display', 'none'); // Close the modal
             });
 
             $('#chat-form').on('submit', function(e) {
@@ -84,7 +167,7 @@
                     },
                     error: function(xhr, status) {
                         const userMessage = $('<div class="message user-message">' + user_input + '</div>');
-                        const aiMessage = $('<div class="message ai-message message-ai">There was an error generating the response!!</div>');
+                        const aiMessage = $('<div class="message ai-message message-ai">Cannot generate a response!!</div>');
 
                         $('#chat-box').append(userMessage);
                         $('#chat-box').append(aiMessage);
