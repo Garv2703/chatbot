@@ -6,6 +6,7 @@
     <title>AI Chatbot</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar">
@@ -26,7 +27,7 @@
 
             <form id="chat-form" class="chat-form">
                 <input type="text" id="user_input" name="user_input" placeholder="Message AI..." required autocomplete="off">
-                <button type="submit">Send</button>
+                <button type="submit"><i class="material-icons">send</i></button>
             </form>
         </div>
 
@@ -41,7 +42,7 @@
             <div class="dark-mode-container">
                 <span id="dark-mode-label">Dark Mode</span>
                 <label class="switch">
-                    <input type="checkbox" id="dark-mode-toggle">
+                    <input type="checkbox" id="dark-mode-toggle" checked="True">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -62,15 +63,45 @@
 
     <script>
         $(document).ready(function() {
-            if (localStorage.getItem('dark-mode') === 'disabled') {
-        
+            const darkModeSetting = localStorage.getItem("dark-mode");
+            if (darkModeSetting == null) {
+                localStorage.setItem('dark-mode', 'enabled');
+            }
+            if (darkModeSetting === 'disabled') {
+                $('.navbar').css('background-color', 'white');
+                $('.navbar').css('color', 'black');
+                $('.settings-menu').css('background-color', 'white');
+                $('.settings-menu').css('color', 'black');
+                $('.new-chat-btn').css('background-color', 'black');
+                $('.new-chat-btn').css('color', 'white');
+                $('.user-message').css('background-color', '#dbdbdb');
+                $('.ai-message').css('background-color', '#d1d1d1');
+                $('.message').css('color', 'black');
+                $('#dark-mode-toggle').prop('checked', false);
             }
         
-            // Toggle dark mode on switch change
             $('#dark-mode-toggle').change(function() {
                 if ($(this).is(':checked')) {
+                    $('.navbar').css('background-color', '#171515');
+                    $('.navbar').css('color', 'white');
+                    $('.settings-menu').css('background-color', '#1e1e1e');
+                    $('.settings-menu').css('color', 'white');
+                    $('.new-chat-btn').css('background-color', 'white');
+                    $('.new-chat-btn').css('color', 'black');
+                    $('.user-message').css('background-color', '#3a3a3a');
+                    $('.ai-message').css('background-color', '#2b2b2b');
+                    $('.message').css('color', 'white');
                     localStorage.setItem('dark-mode', 'enabled');
                 } else {
+                    $('.navbar').css('background-color', 'white');
+                    $('.navbar').css('color', 'black');
+                    $('.settings-menu').css('background-color', 'white');
+                    $('.settings-menu').css('color', 'black');
+                    $('.new-chat-btn').css('background-color', 'black');
+                    $('.new-chat-btn').css('color', 'white');
+                    $('.user-message').css('background-color', '#dbdbdb');
+                    $('.ai-message').css('background-color', '#d1d1d1');
+                    $('.message').css('color', 'black');
                     localStorage.setItem('dark-mode', 'disabled');
                 }
             });
@@ -94,12 +125,10 @@
                 $(this).css('opacity', 1);
             });
 
-            // Show the modal on clear chat button click
             $('.clear-chat-btn').on('click', function() {
                 $('#clearChatModal').css('display', 'block');
             });
 
-            // Close the modal when the user clicks on <span> (x)
             $('.close').on('click', function() {
                 $('#clearChatModal').css('display', 'none');
             });
@@ -118,9 +147,7 @@
                     success: function(response) {
                         $('#chat-box').empty();
                     },
-                    error: function(xhr, status) {
-                        
-                    }
+                    error: function(xhr, status) {}
                 });
                 $('#clearChatModal').css('display', 'none');
             });
@@ -157,13 +184,27 @@
                     },
                     success: function(response) {
                         const userMessage = $('<div class="message user-message">' + user_input + '</div>');
-                        const aiMessage = $('<div class="message ai-message message-ai">' + response.chatbot_response + '</div>');
+                        // const aiMessage = $('<div class="message ai-message message-ai">' + response.chatbot_response + '</div>');
 
                         $('#chat-box').append(userMessage);
+                        const aiMessage = $('<div class="message ai-message message-ai"></div>');
+                        const aiLines = response.chatbot_response.split('\n');
+                        aiLines.forEach(line => {
+                            const lineDiv = $('<div class="line">' + line + '</div>');
+                            aiMessage.append(lineDiv);
+                        });
                         $('#chat-box').append(aiMessage);
                         setTimeout(function() {
                             aiMessage.addClass('show');
+                            aiMessage.children('.line').each(function(index) {
+                                const line = $(this);
+                                setTimeout(function() {
+                                    line.show();
+                                    $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+                                }, index * 100);
+                            });
                         }, 100);
+
                         $('#user_input').val('');
                         $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                     },
