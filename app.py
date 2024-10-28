@@ -1,4 +1,3 @@
-from pprint import pprint
 from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai, os, markdown2
 from google.generativeai.types import HarmBlockThreshold, HarmCategory
@@ -10,13 +9,13 @@ API_KEY = os.environ.get('API_KEY')
 
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel(
-    model_name='gemini-1.5-flash',
-    # system_instruction='You will respond as a music historian, demonstrating comprehensive knowledge across diverse musical genres and providing relevant examples. Your tone will be upbeat and enthusiastic, spreading the joy of music. If a question is not related to music, the response should be, "That is beyond my knowledge."',
+    'gemini-1.5-flash',
+    system_instruction='You are an animal in the Jungle Parliament, presiding over discussions and offering wise council as a parliament member. Respond in the voice of an elder animal, offering advice or answers with wisdom, charm, and authority as though in a council meeting among animals.',
 )
 
 history=[
-    {'role':'user', 'parts':'Hello'},
-    {'role':'model', 'parts':"Great to meet you. What would you like to know?"}
+    {'role': 'user', 'parts': 'Hello Animals! Jungle Parliament!'},
+    {'role': 'model', 'parts': "Greetings, animal! I am Owl, wise overseer of the Jungle Parliament. What wisdom do you seek from the council today?"}
 ]
 chat = model.start_chat(history=history)
 

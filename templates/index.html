@@ -48,7 +48,7 @@
             </div>
             <br>
             <button class="clear-chat-btn">Clear Chat</button>
-            <button class="clear-chat-btn new-chat-btn">New Chat</button>
+            <button class="new-chat-btn">New Chat</button>
         </div>
     </div>
 
@@ -57,6 +57,15 @@
             <span class="close">&times;</span>
             <p>Are you sure you want to clear the chat?</p><br>
             <button id="confirmClearChat" class="modal-button yesbtn">Yes, Clear Chat</button>
+            <button id="cancelClearChat" class="modal-button cancelbtn">No, Cancel</button>
+        </div>
+    </div>
+
+    <div id="newChatModel" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Are you sure you want to clear the chat?</p><br>
+            <button id="confirmNewChat" class="modal-button yesbtn">Yes, Start New Chat</button>
             <button id="cancelClearChat" class="modal-button cancelbtn">No, Cancel</button>
         </div>
     </div>
@@ -131,15 +140,23 @@
 
             $('.close').on('click', function() {
                 $('#clearChatModal').css('display', 'none');
+                $('#newChatModal').css('display', 'none');
             });
 
             $(window).on('click', function(event) {
                 if ($(event.target).is('#clearChatModal')) {
                     $('#clearChatModal').css('display', 'none');
                 }
+                if ($(event.target).is('#newChatModal')) {
+                    $('#newChatModal').css('display', 'none');
+                }
             });
 
             $('.new-chat-btn').on('click', function() {
+                $('#newChatModal').css('display', 'block');
+            });
+
+            $('#confirmNewChat').on('click', function() {
                 $.ajax({
                     url: "{{ url_for('clear_chat') }}",
                     method: 'GET',
@@ -149,7 +166,7 @@
                     },
                     error: function(xhr, status) {}
                 });
-                $('#clearChatModal').css('display', 'none');
+                $('#newChatModal').css('display', 'none');
             });
 
             $('#confirmClearChat').on('click', function() {
@@ -170,6 +187,7 @@
             // Cancel clear chat
             $('#cancelClearChat').on('click', function() {
                 $('#clearChatModal').css('display', 'none'); // Close the modal
+                $('#newChatModal').css('display', 'none'); // Close the modal
             });
 
             $('#chat-form').on('submit', function(e) {
@@ -184,7 +202,6 @@
                     },
                     success: function(response) {
                         const userMessage = $('<div class="message user-message">' + user_input + '</div>');
-                        // const aiMessage = $('<div class="message ai-message message-ai">' + response.chatbot_response + '</div>');
 
                         $('#chat-box').append(userMessage);
                         const aiMessage = $('<div class="message ai-message message-ai"></div>');

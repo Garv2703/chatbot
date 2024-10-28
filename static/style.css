@@ -251,12 +251,7 @@ code {
     transition: opacity 0.2s ease-in-out;
 }
 
-.new-chat-btn:hover {
-    color: white;
-    background-color: black;
-}
-
-.clear-chat-btn:hover {
+.clear-chat-btn:hover, .new-chat-btn:hover {
     opacity: 70%;
 }
 
